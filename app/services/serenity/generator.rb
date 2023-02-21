@@ -8,11 +8,9 @@ module Serenity
     private
 
     def output_name input
-      if input =~ /(.+)\.odt\Z/
-        "#{$1}_output.odt"
-      else
-        "#{input}_output.odt"
-      end
+      extension = input.match(/(\.)[a-z]+/).to_s
+      input_output = input.gsub(extension, '')
+      "#{input_output}_output#{extension}"
     end
   end
 end
