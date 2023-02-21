@@ -4,6 +4,8 @@ class PostsController < ApplicationController
   # GET /posts or /posts.json
   def index
     @posts = Post.all
+    Showcase.new.generate_showcase
+
   end
 
   # GET /posts/1 or /posts/1.json

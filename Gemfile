@@ -62,5 +62,5 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # https://rubygems.org/gems/serenity/versions/0.0.2
-gem 'serenity-odt'
+# gem 'serenity-odt'
 gem 'zip-zip'
