@@ -20,6 +20,6 @@ class Showcase
 
     @crew = [mal, jayne]
 
-    render_odt "#{Rails.root}/public/files/planilha_odt.ods"
+    render_odt "#{Rails.root}/public/files/planilha_xlsx.xlsx"
   end
 end
