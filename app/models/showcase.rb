@@ -19,7 +19,10 @@ class Showcase
     jayne = Person.new('Jayne Cobb', jaynes_items)
 
     @crew = [mal, jayne]
+    @path_images = []
+    @path_images << ::File.join(Rails.public_path, 'dog.png')
+    @path_images << ::File.join(Rails.public_path, 'cat.png')
 
-    render_odt "#{Rails.root}/public/files/planilha_xlsx.xlsx"
+    render_odt "#{Rails.root}/public/files/showcase_odt2.odt"
   end
 end

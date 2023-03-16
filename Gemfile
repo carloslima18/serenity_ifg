@@ -66,5 +66,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'erubis', '~> 2.6', '>= 2.6.6'
 gem 'zip-zip'
 gem 'axlsx'
+gem 'docx'
 # gem "roo", "~> 2.10.0"
 # gem 'write_xlsx'

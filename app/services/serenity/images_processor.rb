@@ -1,12 +1,7 @@
 module Serenity
   class ImagesProcessor
     include Debug
-
     IMAGE_DIR_NAME = "Pictures"
-
-    # Example: { "rId1"=>"roo_media_image1.png",
-    #            "rId2"=>"roo_media_image2.png",
-    #            "rId3"=>"roo_media_image3.png" }
 
     def initialize(xml_content, context)
       @replacements = []
