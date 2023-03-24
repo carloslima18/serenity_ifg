@@ -27,5 +27,8 @@ class Showcase
     @path_images << ::File.join(Rails.public_path, 'cat.png')
 
     render_odt "#{Rails.root}/public/files/showcase.docx"
+    render_odt "#{Rails.root}/public/files/showcase.odt"
+    render_odt "#{Rails.root}/public/files/showcase.ods"
+    render_odt "#{Rails.root}/public/files/showcase.xlsx"
   end
 end
