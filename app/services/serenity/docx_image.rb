@@ -1,5 +1,5 @@
 module Serenity
-  class WordImage
+  class DocxImage
     IMAGE_DIR_NAME = "word/media"
 
     # attr_accessor :file_path, :context, :file_path_output

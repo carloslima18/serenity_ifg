@@ -22,10 +22,10 @@ module Serenity
             unless @zipfile.find_entry(img_substituta)
               @zipfile.add(img_substituta, @path_images[index])
             end
-            image_elem = node.at_xpath("//draw:image")
-            placeholder_path = image_elem.attribute('href').value
-            odt_image_path = ::File.join(IMAGE_DIR_NAME, ::File.basename(placeholder_path))
-            replacements << [odt_image_path, img_substituta]
+            regex = /<draw:image[^>]*xlink:href="([^"]*)"/
+            match_data = regex.match(node.to_s)
+            href_value = match_data[1]
+            replacements << [href_value, img_substituta]
           end
       end
       replacements.each do |r|

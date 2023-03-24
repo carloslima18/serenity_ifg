@@ -18,11 +18,14 @@ class Showcase
                     Item.new('Knife', 'Cut-throat')]
     jayne = Person.new('Jayne Cobb', jaynes_items)
 
+    @names = ['name_1', 'name_2', 'name_3', 'name_4']
+
     @crew = [mal, jayne]
+
     @path_images = []
     @path_images << ::File.join(Rails.public_path, 'dog.png')
     @path_images << ::File.join(Rails.public_path, 'cat.png')
 
-    render_odt "#{Rails.root}/public/files/showcase_odt2.odt"
+    render_odt "#{Rails.root}/public/files/showcase.docx"
   end
 end

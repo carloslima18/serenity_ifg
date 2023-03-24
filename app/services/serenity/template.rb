@@ -16,45 +16,72 @@ module Serenity
       tmpfiles = []
       Zip::ZipFile.open(@template_output) do |zipfile|
 
-        arquivos_imgs = %w(word/_rels/document.xml.rels [Content_Types].xml)
-
-        if is_xlsx_file?(@template)
-          Serenity::XlsxCompiler.new(@template, context, @template_output).evaluate_excel_file
+        if docx_file?(@template)
+          arquivos_imgs = %w(word/_rels/document.xml.rels [Content_Types].xml)
+          arquivos = %w(word/document.xml word/_rels/document.xml.rels [Content_Types].xml)
+        elsif xlsx_file?(@template)
+          arquivos = %w(xl/sharedStrings.xml)
         else
-          if @template.include?('docx')
-            arquivos = %w(word/document.xml word/_rels/document.xml.rels [Content_Types].xml)
-          else
-            arquivos = %w(content.xml styles.xml)
+          arquivos_imgs = %w(content.xml)
+          arquivos = %w(content.xml styles.xml)
+        end
+
+        arquivos.each do |name_file|
+          content = zipfile.read(name_file)
+
+          if docx_file?(@template) and arquivos_imgs.include?(name_file)
+            DocxImage.new(context, content, zipfile).generate_replacements_docx(name_file)
           end
-          arquivos.each do |name_file|
-            content = zipfile.read(name_file)
 
-            if arquivos_imgs.include?(name_file) and @template.include?('docx')
-              WordImage.new(context, content, zipfile).generate_replacements_docx(name_file)
-            end
-
-            unless @template.include?('docx')
-              OdtImage.new(content, context, zipfile).generate_replacements
-            end
-
-
-            eruby = Erubis::Eruby.new(HTMLEntities.new.decode(content.force_encoding('ASCII-8BIT')
-                                                             .force_encoding('UTF-8')), :bufvar => '@_out')
-
-
-            file_output = eval(eruby.src, context)
-            tmpfiles << (file = Tempfile.new("serenity"))
-            file << file_output
-            file.close
-            zipfile.replace(name_file, file.path)
+          if odt_file?(@template) and arquivos_imgs.include?(name_file)
+            OdtImage.new(content, context, zipfile).generate_replacements
           end
+
+          eruby = Erubis::Eruby.new(HTMLEntities.new.decode(content.force_encoding('ASCII-8BIT')
+                                                                   .force_encoding('UTF-8')), :bufvar => '@_out', :pattern => '{% %}')
+
+          file_output = eval(eruby.src, context)
+          tmpfiles << (file = Tempfile.new("serenity"))
+          file << file_output
+          file.close
+          zipfile.replace(name_file, file.path)
         end
       end
     end
 
-    def is_xlsx_file?(path)
-      extension = File.extname(path)
-      extension == ".xlsx"
+    def xlsx_file?(path)
+      File.extname(path) == ".xlsx"
+    end
+
+    def docx_file?(path)
+      File.extname(path) == ".docx"
+    end
+
+    def odt_file?(path)
+      File.extname(path) == ".odt"
+    end
+
+    def process_odt_eruby context
+      tmpfiles = []
+      Zip::ZipFile.open(@template_output) do |zipfile|
+        if @template_output.include?('docx')
+          arquivos = %w(word/document.xml)
+        else
+          arquivos = %w(content.xml styles.xml)
+        end
+
+        arquivos.each do |xml_file|
+          content = zipfile.read(xml_file)
+          odteruby = OdtEruby.new(XmlReader.new(content.force_encoding('ASCII-8BIT').force_encoding('UTF-8')))
+          out = odteruby.evaluate(context)
+
+          tmpfiles << (file = Tempfile.new("serenity"))
+          file << out
+          file.close
+
+          zipfile.replace(xml_file, file.path)
+        end
+      end
     end
 
   end
